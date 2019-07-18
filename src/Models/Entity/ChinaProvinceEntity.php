@@ -30,4 +30,10 @@ class ChinaProvinceEntity extends Models
      * @var  string
      */
     protected $table = 'area_china_province';
+    /**
+     * hidden.  2019/7/18 22:10.
+     *
+     * @var  array
+     */
+    protected $hidden = ['region'];
 }

@@ -36,6 +36,8 @@ class AreaService
      * @var  \Woisks\AreaBasis\Models\Repository\CountryRepository
      */
     private $countryRepo;
+
+
     /**
      * provinceRepo.  2019/6/10 21:14.
      *
@@ -61,8 +63,9 @@ class AreaService
      */
     private $townRepo;
 
+
     /**
-     * AreaService constructor. 2019/6/10 21:14.
+     * AreaService constructor. 2019/7/18 20:32.
      *
      * @param \Woisks\AreaBasis\Models\Repository\CountryRepository       $countryRepo
      * @param \Woisks\AreaBasis\Models\Repository\ChinaProvinceRepository $provinceRepo
@@ -94,18 +97,52 @@ class AreaService
      */
     public function country()
     {
-        return res(200, 'success', $this->countryRepo->get()->toArray());
+        $country = $this->countryRepo->get();
+
+        $data = [];
+
+        foreach ($country as $v) {
+            if ($v->region == 1) {
+                $data['Africa'][] = $v;
+            } elseif ($v->region == 2) {
+                $data['Asia'][] = $v;
+            } elseif ($v->region == 3) {
+                $data['Europe'][] = $v;
+            } elseif ($v->region == 4) {
+                $data['Latin America and the Caribbean'][] = $v;
+            } elseif ($v->region == 5) {
+                $data['Oceania'][] = $v;
+            } elseif ($v->region == 6) {
+                $data['Northern America'][] = $v;
+            }
+
+        }
+
+        return res(200, 'success', $data);
     }
 
-    /**
-     * province. 2019/6/10 21:14.
-     *
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     public function province()
     {
-        return res(200, 'success', $this->provinceRepo->get()->toArray());
+        $province = $this->provinceRepo->get();
+
+        $data = [];
+
+        foreach ($province as $v) {
+            if ($v->region == 1) {
+                $data['华东地区'][] = $v;
+            } elseif ($v->region == 2) {
+                $data['华北东北'][] = $v;
+            } elseif ($v->region == 3) {
+                $data['华南西南'][] = $v;
+            } elseif ($v->region == 4) {
+                $data['华中西北'][] = $v;
+            } elseif ($v->region == 5) {
+                $data['港澳台钓'][] = $v;
+            }
+        }
+
+        return res(200, 'success', $data);
     }
 
     /**

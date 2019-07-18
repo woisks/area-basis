@@ -30,5 +30,14 @@ class CountryEntity extends Models
      * @var  string
      */
     protected $table = 'area_country';
+    /**
+     * hidden.  2019/7/18 20:27.
+     *
+     * @var  array
+     */
+    protected $hidden = [
+        'status',
+        'region'
+    ];
 
 }
