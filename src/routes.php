@@ -19,7 +19,7 @@ Route::prefix('area')
 
          Route::get('/', 'AreaController@country');
          Route::get('province', 'AreaController@province');
-         Route::get('city/{province_id}', 'AreaController@city');
-         Route::get('county/{city_id}', 'AreaController@county');
-         Route::get('town/{county_id}', 'AreaController@town');
+         Route::get('city/{province_id}', 'AreaController@city')->where(['province_id' => '[0-9]+']);
+         Route::get('county/{city_id}', 'AreaController@county')->where(['city_id' => '[0-9]+']);
+         Route::get('town/{county_id}', 'AreaController@town')->where(['county_id' => '[0-9]+']);
      });
