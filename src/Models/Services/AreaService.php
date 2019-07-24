@@ -162,7 +162,7 @@ class AreaService
         $collect = $this->cityRepo->get($province_id);
 
         if ($collect->isEmpty()) {
-            return res(404, 'param error province not exists');
+            return res(404, 'param error province id not exists');
         }
 
         return res(200, 'success', $collect->toArray());
@@ -179,13 +179,13 @@ class AreaService
     {
         if (strlen($city_id) !== 6 && !is_int($city_id)) {
 
-            return res(422, 'param province id error');
+            return res(422, 'param city id error');
         }
 
         $collect = $this->countyRepo->get($city_id);
 
         if ($collect->isEmpty()) {
-            return res(404, 'param error province not exists');
+            return res(404, 'param error city id not exists');
         }
 
         return res(200, 'success', $collect->toArray());
@@ -203,13 +203,13 @@ class AreaService
     {
         if (strlen($county_id) !== 6 && !is_int($county_id)) {
 
-            return res(422, 'param province id error');
+            return res(422, 'param county id error');
         }
 
         $collect = $this->townRepo->get($county_id);
 
         if ($collect->isEmpty()) {
-            return res(404, 'param error province not exists');
+            return res(404, 'param error county id not exists');
         }
 
         return res(200, 'success', $collect->toArray());

@@ -14,8 +14,9 @@ declare(strict_types=1);
 
 Route::prefix('area')
      ->namespace('Woisks\AreaBasis\Http\Controllers')
+     ->middleware('throttle:10,1')
      ->group(function () {
-         
+
          Route::get('/', 'AreaController@country');
          Route::get('province', 'AreaController@province');
          Route::get('city/{province_id}', 'AreaController@city');

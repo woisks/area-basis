@@ -45,6 +45,12 @@ class AreaController extends BaseController
         $this->areaService = $areaService;
     }
 
+
+    public function area($province, $province_id, $city_id, $county_id)
+    {
+        dd($province, $province_id, $city_id, $county_id);
+    }
+
     /**
      * country. 2019/6/10 21:13.
      *
