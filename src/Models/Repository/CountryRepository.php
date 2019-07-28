@@ -26,17 +26,19 @@ use Woisks\AreaBasis\Models\Entity\CountryEntity;
  */
 class CountryRepository
 {
+
     /**
-     * model.  2019/6/10 10:19.
+     * model.  2019/7/28 18:18.
      *
-     * @var static \Woisks\AreaBasis\Models\Entity\CountryEntity
+     * @var static CountryEntity
      */
     private static $model;
 
+
     /**
-     * CountryRepository constructor. 2019/6/10 10:19.
+     * CountryRepository constructor. 2019/7/28 18:55.
      *
-     * @param \Woisks\AreaBasis\Models\Entity\CountryEntity $country
+     * @param CountryEntity $country
      *
      * @return void
      */
@@ -46,26 +48,15 @@ class CountryRepository
     }
 
     /**
-     * get. 2019/6/10 10:20.
+     * all. 2019/7/28 18:56.
      *
      *
-     * @return \Illuminate\Database\Eloquent\Collection|\Woisks\AreaBasis\Models\Entity\CountryEntity[]
+     * @return mixed
      */
-    public function get()
+    public function all()
     {
         return self::$model->all();
     }
 
-    /**
-     * exists. 2019/6/10 21:51.
-     *
-     * @param $country_id
-     *
-     * @return bool
-     */
-    public function exists($country_id): bool
-    {
-        return self::$model->where('id', $country_id)->exists();
-    }
 
 }

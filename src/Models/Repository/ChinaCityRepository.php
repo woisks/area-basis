@@ -26,17 +26,19 @@ use Woisks\AreaBasis\Models\Entity\ChinaCityEntity;
  */
 class ChinaCityRepository
 {
+
     /**
-     * model.  2019/6/10 10:59.
+     * model.  2019/7/28 18:54.
      *
-     * @var static \Woisks\AreaBasis\Models\Entity\ChinaCityEntity
+     * @var static ChinaCityEntity
      */
     private static $model;
 
+
     /**
-     * ChinaCityRepository constructor. 2019/6/10 10:59.
+     * ChinaCityRepository constructor. 2019/7/28 18:54.
      *
-     * @param \Woisks\AreaBasis\Models\Entity\ChinaCityEntity $city
+     * @param ChinaCityEntity $city
      *
      * @return void
      */
@@ -45,28 +47,18 @@ class ChinaCityRepository
         self::$model = $city;
     }
 
+
     /**
-     * get. 2019/6/10 10:59.
+     * get. 2019/7/28 18:54.
      *
      * @param $province_id
      *
-     * @return \Illuminate\Support\Collection|[]
+     * @return mixed
      */
     public function get($province_id)
     {
         return self::$model->where('province_id', $province_id)->select('city_id as city', 'short_name as name')->get();
     }
 
-    /**
-     * exists. 2019/6/10 21:48.
-     *
-     * @param $city_id
-     *
-     * @return bool
-     */
-    public function exists($city_id): bool
-    {
-        return self::$model->where('city_id', $city_id)->exists();
-    }
-
+    
 }

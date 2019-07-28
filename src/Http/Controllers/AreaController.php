@@ -15,7 +15,12 @@ declare(strict_types=1);
 namespace Woisks\AreaBasis\Http\Controllers;
 
 
-use Woisks\AreaBasis\Models\Services\AreaService;
+use Illuminate\Http\JsonResponse;
+use Woisks\AreaBasis\Models\Repository\ChinaCityRepository;
+use Woisks\AreaBasis\Models\Repository\ChinaCountyRepository;
+use Woisks\AreaBasis\Models\Repository\ChinaProvinceRepository;
+use Woisks\AreaBasis\Models\Repository\ChinaTownRepository;
+use Woisks\AreaBasis\Models\Repository\CountryRepository;
 
 /**
  * Class AreaController.
@@ -27,86 +32,192 @@ use Woisks\AreaBasis\Models\Services\AreaService;
 class AreaController extends BaseController
 {
     /**
-     * areaService.  2019/6/10 21:13.
+     * countryRepo.  2019/7/28 18:33.
      *
-     * @var  \Woisks\AreaBasis\Models\Services\AreaService
+     * @var  CountryRepository
      */
-    private $areaService;
+    private $countryRepo;
+    /**
+     * provinceRepo.  2019/7/28 18:33.
+     *
+     * @var  ChinaProvinceRepository
+     */
+    private $provinceRepo;
+    /**
+     * cityRepo.  2019/7/28 18:33.
+     *
+     * @var  ChinaCityRepository
+     */
+    private $cityRepo;
+    /**
+     * countyRepo.  2019/7/28 18:33.
+     *
+     * @var  ChinaCountyRepository
+     */
+    private $countyRepo;
+    /**
+     * townRepo.  2019/7/28 18:33.
+     *
+     * @var  ChinaTownRepository
+     */
+    private $townRepo;
+
 
     /**
-     * AreaController constructor. 2019/6/10 21:13.
+     * AreaController constructor. 2019/7/28 18:33.
      *
-     * @param \Woisks\AreaBasis\Models\Services\AreaService $areaService
+     * @param CountryRepository $countryRepo
+     * @param ChinaProvinceRepository $provinceRepo
+     * @param ChinaCityRepository $cityRepo
+     * @param ChinaCountyRepository $countyRepo
+     * @param ChinaTownRepository $townRepo
      *
      * @return void
      */
-    public function __construct(AreaService $areaService)
+    public function __construct(CountryRepository $countryRepo,
+                                ChinaProvinceRepository $provinceRepo,
+                                ChinaCityRepository $cityRepo,
+                                ChinaCountyRepository $countyRepo,
+                                ChinaTownRepository $townRepo)
     {
-        $this->areaService = $areaService;
-    }
-
-
-    public function area($province, $province_id, $city_id, $county_id)
-    {
-        dd($province, $province_id, $city_id, $county_id);
+        $this->countryRepo  = $countryRepo;
+        $this->provinceRepo = $provinceRepo;
+        $this->cityRepo     = $cityRepo;
+        $this->countyRepo   = $countyRepo;
+        $this->townRepo     = $townRepo;
     }
 
     /**
      * country. 2019/6/10 21:13.
      *
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function country()
     {
-        return $this->areaService->country();
+        $country = $this->countryRepo->all();
+
+        $data = [];
+
+        foreach ($country as $v) {
+            if ($v->region == 1) {
+                $data['Africa'][] = $v;
+            } elseif ($v->region == 2) {
+                $data['Asia'][] = $v;
+            } elseif ($v->region == 3) {
+                $data['Europe'][] = $v;
+            } elseif ($v->region == 4) {
+                $data['Latin America and the Caribbean'][] = $v;
+            } elseif ($v->region == 5) {
+                $data['Oceania'][] = $v;
+            } elseif ($v->region == 6) {
+                $data['Northern America'][] = $v;
+            }
+
+        }
+        return res(200, 'success', $data);
     }
 
+
     /**
-     * province. 2019/6/10 21:13.
+     * province. 2019/7/28 18:33.
      *
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function province()
     {
-        return $this->areaService->province();
+        $province = $this->provinceRepo->all();
+
+        $data = [];
+
+        foreach ($province as $v) {
+            if ($v->region == 1) {
+                $data['华东地区'][] = $v;
+            } elseif ($v->region == 2) {
+                $data['华北东北'][] = $v;
+            } elseif ($v->region == 3) {
+                $data['华南西南'][] = $v;
+            } elseif ($v->region == 4) {
+                $data['华中西北'][] = $v;
+            } elseif ($v->region == 5) {
+                $data['港澳台钓'][] = $v;
+            }
+        }
+
+        return res(200, 'success', $data);
     }
 
+
     /**
-     * city. 2019/6/10 21:19.
+     * city. 2019/7/28 18:33.
      *
      * @param $province_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function city($province_id)
     {
-        return $this->areaService->city($province_id);
+        if (strlen($province_id) !== 6 && !is_int($province_id)) {
+
+            return res(422, 'param province id error');
+        }
+
+        $city = $this->cityRepo->get($province_id);
+
+        if ($city->isEmpty()) {
+            return res(404, 'param error province id not exists');
+        }
+
+        return res(200, 'success', $city);
     }
 
+
     /**
-     * county. 2019/6/10 21:19.
+     * county. 2019/7/28 18:33.
      *
      * @param $city_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function county($city_id)
     {
-        return $this->areaService->county($city_id);
+        if (strlen($city_id) !== 6 && !is_int($city_id)) {
+
+            return res(422, 'param city id error');
+        }
+
+        $county = $this->countyRepo->get($city_id);
+
+        if ($county->isEmpty()) {
+            return res(404, 'param error city id not exists');
+        }
+
+        return res(200, 'success', $county);
     }
 
+
     /**
-     * town. 2019/6/10 21:19.
+     * town. 2019/7/28 18:33.
      *
      * @param $county_id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function town($county_id)
     {
-        return $this->areaService->town($county_id);
+        if (strlen($county_id) !== 6 && !is_int($county_id)) {
+
+            return res(422, 'param county id error');
+        }
+
+        $town = $this->townRepo->get($county_id);
+
+        if ($town->isEmpty()) {
+            return res(404, 'param error county id not exists');
+        }
+
+        return res(200, 'success', $town);
     }
 
 }

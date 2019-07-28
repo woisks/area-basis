@@ -28,17 +28,17 @@ class ChinaTownRepository
 {
 
     /**
-     * model.  2019/6/10 21:51.
+     * model.  2019/7/28 18:54.
      *
-     * @var static \Woisks\AreaBasis\Models\Entity\ChinaTownEntity
+     * @var static ChinaTownEntity
      */
     private static $model;
 
 
     /**
-     * ChinaTownRepository constructor. 2019/6/10 21:51.
+     * ChinaTownRepository constructor. 2019/7/28 18:54.
      *
-     * @param \Woisks\AreaBasis\Models\Entity\ChinaTownEntity $town
+     * @param ChinaTownEntity $town
      *
      * @return void
      */
@@ -47,8 +47,9 @@ class ChinaTownRepository
         self::$model = $town;
     }
 
+
     /**
-     * get. 2019/6/10 20:51.
+     * get. 2019/7/28 18:54.
      *
      * @param $county_id
      *
@@ -59,16 +60,5 @@ class ChinaTownRepository
         return self::$model->where('county_id', $county_id)->select('town_id as town', 'town as name')->get();
     }
 
-    /**
-     * exists. 2019/6/10 21:51.
-     *
-     * @param $town_id
-     *
-     * @return bool
-     */
-    public function exists($town_id)
-    {
-        return self::$model->where('town_id', $town_id)->exists();
-    }
 
 }

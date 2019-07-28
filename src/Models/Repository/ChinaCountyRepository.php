@@ -26,17 +26,19 @@ use Woisks\AreaBasis\Models\Entity\ChinaCountyEntity;
  */
 class ChinaCountyRepository
 {
+
     /**
-     * model.  2019/6/10 20:51.
+     * model.  2019/7/28 18:54.
      *
-     * @var static \Woisks\AreaBasis\Models\Entity\ChinaCountyEntity
+     * @var static ChinaCountyEntity
      */
     private static $model;
 
+
     /**
-     * ChinaCountyRepository constructor. 2019/6/10 20:51.
+     * ChinaCountyRepository constructor. 2019/7/28 18:54.
      *
-     * @param \Woisks\AreaBasis\Models\Entity\ChinaCountyEntity $county
+     * @param ChinaCountyEntity $county
      *
      * @return void
      */
@@ -45,8 +47,9 @@ class ChinaCountyRepository
         self::$model = $county;
     }
 
+
     /**
-     * get. 2019/6/10 20:51.
+     * get. 2019/7/28 18:54.
      *
      * @param $city_id
      *
@@ -57,16 +60,5 @@ class ChinaCountyRepository
         return self::$model->where('city_id', $city_id)->select('county_id as county', 'short_name as name')->get();
     }
 
-    /**
-     * exists. 2019/6/10 21:48.
-     *
-     * @param $county_id
-     *
-     * @return bool
-     */
-    public function exists($county_id): bool
-    {
-        return self::$model->where('county_id', $county_id)->exists();
-    }
 
 }
