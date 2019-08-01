@@ -30,4 +30,5 @@ class ChinaCountyEntity extends Models
      * @var  string
      */
     protected $table = 'area_china_county';
+
 }

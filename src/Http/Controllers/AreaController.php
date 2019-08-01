@@ -31,6 +31,8 @@ use Woisks\AreaBasis\Models\Repository\CountryRepository;
  */
 class AreaController extends BaseController
 {
+
+
     /**
      * countryRepo.  2019/7/28 18:33.
      *
@@ -88,34 +90,47 @@ class AreaController extends BaseController
     }
 
     /**
-     * country. 2019/6/10 21:13.
+     * country. 2019/8/1 16:06.
      *
      *
      * @return JsonResponse
      */
     public function country()
     {
-        $country = $this->countryRepo->all();
+        //如果存在config文件直接返回
+        $config = config('country');
+        if (!$config) {
 
-        $data = [];
-
-        foreach ($country as $v) {
-            if ($v->region == 1) {
-                $data['Africa'][] = $v;
-            } elseif ($v->region == 2) {
-                $data['Asia'][] = $v;
-            } elseif ($v->region == 3) {
-                $data['Europe'][] = $v;
-            } elseif ($v->region == 4) {
-                $data['Latin America and the Caribbean'][] = $v;
-            } elseif ($v->region == 5) {
-                $data['Oceania'][] = $v;
-            } elseif ($v->region == 6) {
-                $data['Northern America'][] = $v;
+            $country = $this->countryRepo->all();
+            $data    = [];
+            foreach ($country as $v) {
+                if ($v->region == 1) {
+                    //Africa
+                    $data['非洲'][] = $v->toArray();
+                } elseif ($v->region == 2) {
+                    //Asia
+                    $data['亚洲'][] = $v->toArray();
+                } elseif ($v->region == 3) {
+                    //Europe
+                    $data['欧洲'][] = $v->toArray();
+                } elseif ($v->region == 4) {
+                    //South America
+                    $data['南美洲'][] = $v->toArray();
+                } elseif ($v->region == 5) {
+                    //Oceania
+                    $data['大洋洲'][] = $v->toArray();
+                } elseif ($v->region == 6) {
+                    //Northern America
+                    $data['北美洲'][] = $v->toArray();
+                }
             }
-
+            //生成静态Config文件
+            config_toFile('country', $data);
+            return res(200, 'success', $data);
         }
-        return res(200, 'success', $data);
+
+        return res(200, 'success', $config);
+
     }
 
 
@@ -127,25 +142,31 @@ class AreaController extends BaseController
      */
     public function province()
     {
-        $province = $this->provinceRepo->all();
+        //如果存在config文件直接返回
+        $config = config('province');
+        if (!$config) {
 
-        $data = [];
-
-        foreach ($province as $v) {
-            if ($v->region == 1) {
-                $data['华东地区'][] = $v;
-            } elseif ($v->region == 2) {
-                $data['华北东北'][] = $v;
-            } elseif ($v->region == 3) {
-                $data['华南西南'][] = $v;
-            } elseif ($v->region == 4) {
-                $data['华中西北'][] = $v;
-            } elseif ($v->region == 5) {
-                $data['港澳台钓'][] = $v;
+            $province = $this->provinceRepo->all();
+            $data     = [];
+            foreach ($province as $v) {
+                if ($v->region == 1) {
+                    $data['华东地区'][] = $v->toArray();
+                } elseif ($v->region == 2) {
+                    $data['华北东北'][] = $v->toArray();
+                } elseif ($v->region == 3) {
+                    $data['华南西南'][] = $v->toArray();
+                } elseif ($v->region == 4) {
+                    $data['华中西北'][] = $v->toArray();
+                } elseif ($v->region == 5) {
+                    $data['港澳台钓'][] = $v->toArray();
+                }
             }
-        }
 
-        return res(200, 'success', $data);
+            //生成静态Config文件
+            config_toFile('province', $data);
+            return res(200, 'success', $data);
+        }
+        return res(200, 'success', $config);
     }
 
 
@@ -158,6 +179,7 @@ class AreaController extends BaseController
      */
     public function city($province_id)
     {
+        //验证省份ID参数合法
         if (strlen($province_id) !== 6 && !is_int($province_id)) {
 
             return res(422, 'param province id error');
@@ -182,6 +204,7 @@ class AreaController extends BaseController
      */
     public function county($city_id)
     {
+        //tips:town 直辖县级
         if (strlen($city_id) !== 6 && !is_int($city_id)) {
 
             return res(422, 'param city id error');
@@ -206,6 +229,7 @@ class AreaController extends BaseController
      */
     public function town($county_id)
     {
+        //tips:town 直辖县级
         if (strlen($county_id) !== 6 && !is_int($county_id)) {
 
             return res(422, 'param county id error');

@@ -21,6 +21,13 @@ use Woisks\AreaBasis\Models\Entity\ChinaProvinceEntity;
 use Woisks\AreaBasis\Models\Entity\ChinaTownEntity;
 use Woisks\AreaBasis\Models\Entity\CountryEntity;
 
+/**
+ * Class AreaServices.
+ *
+ * @package Woisks\AreaBasis\Models\Services
+ *
+ * @Author Maple Grove  <bolelin@126.com> 2019/8/1 16:42
+ */
 class AreaServices
 {
     /**
@@ -88,6 +95,17 @@ class AreaServices
 
     }
 
+    /**
+     * cascade. 2019/8/1 16:42.
+     *
+     * @param $country
+     * @param $province
+     * @param $city
+     * @param $county
+     * @param $town
+     *
+     * @return array|null
+     */
     public static function cascade($country, $province, $city, $county, $town)
     {
 
@@ -95,7 +113,6 @@ class AreaServices
             //验证是不是中国
             $db = self::first('country', $country);
             if ($db) {
-
                 return ['country'     => $db->cn_name,
                         'country_id'  => $db->id,
                         'province'    => '',
@@ -137,8 +154,7 @@ class AreaServices
             $node['id']    = $town;
             $node['table'] = 'town';
         }
-
-
+        
         if (empty($node)) {
             //如果为空直接返回中国
             return [
@@ -154,111 +170,99 @@ class AreaServices
                 'town_id'     => 0
             ];
         }
-
         return self::serivces($node['table'], $node['id']);
     }
 
+    /**
+     * serivces. 2019/8/1 16:42.
+     *
+     * @param $table
+     * @param $id
+     *
+     * @return array
+     */
     private static function serivces($table, $id)
     {
         switch ($table) {
             case 'town':
-                $town     = self::first('town', $id)->town_id;
-                $county   = self::first('county', $town->county_id);
-                $city     = self::first('city', $county->city_id);
-                $province = self::first('province', $city->province_id);
-                dd($county);
+                $db = self::first('town', $id);
+                list($country, $province, $city, $county, $town) = explode(',', $db->merger_name);
                 return ['country'     => '中国',
                         'country_id'  => 1,
-                        'province'    => $province->short_name,
-                        'province_id' => $province->province_id,
-                        'city'        => $city->short_name,
-                        'city_id'     => $city->city_id,
-                        'county'      => $county->short_name,
-                        'county_id'   => $county->county_id,
-                        'town'        => $town->short_name,
-                        'town_id'     => $town->town_id
+                        'province'    => $province,
+                        'province_id' => $db->province_id,
+                        'city'        => $city,
+                        'city_id'     => $db->city_id,
+                        'county'      => $county,
+                        'county_id'   => $db->county_id,
+                        'town'        => $town,
+                        'town_id'     => $db->town_id
                 ];
                 break;
 
-//            case 'city':
-//                return self::city($node['id']);
-//                break;
-//
-//            case 'county':
-//                list($country, $province, $city, $county) = explode(',', $node['model']->merger_name);
-//                return ['country' => $country, 'province' => $province, 'city' => $city, 'county' => $county, 'town' => ''];
-//                break;
-//
-//            case 'town':
-//                list($country, $province, $city, $county, $town) = explode(',', $node['model']->merger_name);
-//                return ['country' => $country, 'province' => $province, 'city' => $city, 'county' => $county, 'town' => $town];
-//                break;
+            case 'county':
+                $db = self::first('county', $id);
+                list($country, $province, $city, $county) = explode(',', $db->merger_name);
+                return ['country'     => '中国',
+                        'country_id'  => 1,
+                        'province'    => $province,
+                        'province_id' => $db->province_id,
+                        'city'        => $city,
+                        'city_id'     => $db->city_id,
+                        'county'      => $county,
+                        'county_id'   => $db->county_id,
+                        'town'        => '',
+                        'town_id'     => 0
+                ];
+                break;
+
+            case 'city':
+                $db = self::first('city', $id);
+                list($country, $province, $city) = explode(',', $db->merger_name);
+                return ['country'     => '中国',
+                        'country_id'  => 1,
+                        'province'    => $province,
+                        'province_id' => $db->province_id,
+                        'city'        => $city,
+                        'city_id'     => $db->city_id,
+                        'county'      => '',
+                        'county_id'   => 0,
+                        'town'        => '',
+                        'town_id'     => 0
+                ];
+                break;
+
+            case 'province':
+                $db = self::first('province', $id);
+                list($country, $province) = explode(',', $db->merger_name);
+                return ['country'     => '中国',
+                        'country_id'  => 1,
+                        'province'    => $province,
+                        'province_id' => $db->province_id,
+                        'city'        => '',
+                        'city_id'     => 0,
+                        'county'      => '',
+                        'county_id'   => 0,
+                        'town'        => '',
+                        'town_id'     => 0
+                ];
+                break;
 
             default:
-                return null;
-        }
-    }
-
-
-    private static function province($id)
-    {
-        $db = self::first('province', $id);
-        if ($db) {
-            return ['country'     => '中国',
+                return [
+                    'country'     => '中国',
                     'country_id'  => 1,
-                    'province'    => $db->short_name,
-                    'province_id' => $db->province_id,
+                    'province'    => '',
+                    'province_id' => 0,
                     'city'        => '',
                     'city_id'     => 0,
                     'county'      => '',
                     'county_id'   => 0,
                     'town'        => '',
                     'town_id'     => 0
-            ];
+                ];
         }
-
-        return ['country'     => '中国',
-                'country_id'  => 1,
-                'province'    => '',
-                'province_id' => 0,
-                'city'        => '',
-                'city_id'     => 0,
-                'county'      => '',
-                'county_id'   => 0,
-                'town'        => '',
-                'town_id'     => 0
-        ];
     }
 
-    private static function city($id)
-    {
-        $db = self::first('city', $id);
-        if ($db) {
-            $province_db = self::first('province', $db->province_id);
-            return ['country'     => '中国',
-                    'country_id'  => 1,
-                    'province'    => $province_db->short_name,
-                    'province_id' => $db->province_id,
-                    'city'        => $db->short_name,
-                    'city_id'     => $db->city_id,
-                    'county'      => '',
-                    'county_id'   => 0,
-                    'town'        => '',
-                    'town_id'     => 0
-            ];
-        }
-
-        return ['country'     => '中国',
-                'country_id'  => 1,
-                'province'    => '',
-                'province_id' => 0,
-                'city'        => '',
-                'city_id'     => 0,
-                'county'      => '',
-                'county_id'   => 0,
-                'town'        => '',
-                'town_id'     => 0
-        ];
-    }
 
 }
