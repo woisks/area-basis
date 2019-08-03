@@ -98,6 +98,7 @@ class AreaServices
     /**
      * cascade. 2019/8/1 16:42.
      *
+     * 级联验证数据是否合法
      * @param $country
      * @param $province
      * @param $city
@@ -154,7 +155,7 @@ class AreaServices
             $node['id']    = $town;
             $node['table'] = 'town';
         }
-        
+
         if (empty($node)) {
             //如果为空直接返回中国
             return [
