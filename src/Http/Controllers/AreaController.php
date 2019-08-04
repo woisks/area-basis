@@ -100,7 +100,7 @@ class AreaController extends BaseController
         //如果存在config文件直接返回
         $config = config('country');
         if (!$config) {
-
+            
             $country = $this->countryRepo->all();
             $data    = [];
             foreach ($country as $v) {

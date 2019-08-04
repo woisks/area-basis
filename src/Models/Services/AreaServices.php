@@ -19,6 +19,7 @@ use Woisks\AreaBasis\Models\Entity\ChinaCityEntity;
 use Woisks\AreaBasis\Models\Entity\ChinaCountyEntity;
 use Woisks\AreaBasis\Models\Entity\ChinaProvinceEntity;
 use Woisks\AreaBasis\Models\Entity\ChinaTownEntity;
+use Woisks\AreaBasis\Models\Entity\CountEntity;
 use Woisks\AreaBasis\Models\Entity\CountryEntity;
 
 /**
@@ -30,6 +31,61 @@ use Woisks\AreaBasis\Models\Entity\CountryEntity;
  */
 class AreaServices
 {
+
+    /**
+     * increment. 2019/8/4 14:19.
+     *
+     * @param $type
+     * @param $table
+     * @param $numeric
+     *
+     * @return mixed
+     */
+    public static function increment($type, $table, $numeric)
+    {
+        $db = CountEntity::firstOrCreate(['type' => $type, 'table' => $table, 'numeric' => $numeric], ['id' => create_numeric_id()]);
+        $db->increment('count');
+        return $db;
+    }
+
+    /**
+     * decrement. 2019/8/4 14:19.
+     *
+     * @param $type
+     * @param $table
+     * @param $numeric
+     *
+     * @return mixed
+     */
+    public static function decrement($type, $table, $numeric)
+    {
+        $db = CountEntity::firstOrCreate(['type' => $type, 'table' => $table, 'numeric' => $numeric], ['id' => create_numeric_id()]);
+        $db->decrement('count');
+        return $db;
+    }
+
+
+    /**
+     * get. 2019/8/4 14:25.
+     *
+     * @param $type
+     * @param $table
+     * @param null $numeric
+     *
+     * @return mixed
+     */
+    public static function get($type, $table, $numeric = null)
+    {
+        if ($numeric) {
+            //city or county or town 返回单条数据
+            return CountEntity::where('type', $type)->where('table', $table)->where('numeric', $numeric)->first();
+        }
+
+        //country or province 返回集合
+        return CountEntity::where('type', $type)->where('table', $table)->get();
+
+    }
+
     /**
      * exists. 2019/7/31 21:27.
      *
